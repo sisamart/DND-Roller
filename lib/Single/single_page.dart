@@ -1,6 +1,7 @@
 import 'package:dnd_roller/Models/roll_result.dart';
-import 'package:dnd_roller/Partials/dice_grid_widget.dart';
+import 'package:dnd_roller/Single/single_dice_grid_widget.dart';
 import 'package:dnd_roller/Partials/labeled_input.dart';
+import 'package:dnd_roller/Partials/roll_button.dart';
 import 'package:dnd_roller/Partials/roll_summary_widget.dart';
 import 'package:dnd_roller/Services/roll_service.dart';
 import 'package:dnd_roller/Services/roll_settings.dart';
@@ -105,35 +106,24 @@ class SinglePage extends StatelessWidget {
             ),
           ),
         ),
-        Center(
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).primaryColor,
-                  fixedSize: Size(200, 50)),
-              onPressed: () {
-                if (_formKey.currentState!.validate()) {
-                  settings = _makeSettings();
-                  final service = RollService(settings: settings);
-                  final rolls = service.getRolls();
-                  stats = service.calculateSummary(rolls);
-                  rollsNotifier.value = rolls;
-                }
-              },
-              child: SizedBox(
-                  width: 200,
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    child: Center(
-                        child: Text(
-                      "Roll",
-                      style: TextStyle(color: Colors.white, fontSize: 30),
-                    )),
-                  ))),
+        Center(child: RollButton(
+          onPressed: () {
+            if (_formKey.currentState!.validate()) {
+              settings = _makeSettings();
+              final service = RollService(settings: settings);
+              final rolls = service.getRolls();
+              stats = service.calculateSummary(rolls);
+              rollsNotifier.value = rolls;
+            }
+          },
+        )),
+        SizedBox(
+          height: 4,
         ),
-        SizedBox(height: 4,),
         Divider(),
-        SizedBox(height: 4,),
+        SizedBox(
+          height: 4,
+        ),
         ValueListenableBuilder(
           valueListenable: rollsNotifier,
           builder: (context, value, child) {

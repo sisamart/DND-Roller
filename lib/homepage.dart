@@ -1,4 +1,5 @@
 import 'package:dnd_roller/Single/single_page.dart';
+import 'package:dnd_roller/Versus/versus_page.dart';
 import 'package:flutter/material.dart';
 
 class PlayerRollPage extends StatelessWidget {
@@ -43,10 +44,11 @@ class PlayerRollPage extends StatelessWidget {
             ],
           ),
         ),
+        backgroundColor: Color(0xFFEBE5F7),
         body: TabBarView(
           children: [
             SinglePage(),
-            Center(child: Text('Content 2')),
+            VersusPage()
           ],
         ),
       ),

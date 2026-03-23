@@ -2,7 +2,6 @@ import 'package:dnd_roller/Models/roll_result.dart';
 import 'package:dnd_roller/Partials/die_widget.dart';
 import 'package:dnd_roller/Partials/row_stats_widget.dart';
 import 'package:dnd_roller/Services/row_stats.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../Services/roll_settings.dart';
