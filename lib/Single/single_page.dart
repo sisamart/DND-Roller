@@ -1,6 +1,10 @@
 import 'package:dnd_roller/Models/roll_result.dart';
+import 'package:dnd_roller/Partials/Inputs/dice_per_roll_input.dart';
+import 'package:dnd_roller/Partials/Inputs/die_sides_input.dart';
+import 'package:dnd_roller/Partials/Inputs/number_of_rolls_input.dart';
+import 'package:dnd_roller/Partials/Inputs/required_successes_input.dart';
+import 'package:dnd_roller/Partials/Inputs/success_threshold_input.dart';
 import 'package:dnd_roller/Single/single_dice_grid_widget.dart';
-import 'package:dnd_roller/Partials/labeled_input.dart';
 import 'package:dnd_roller/Partials/roll_button.dart';
 import 'package:dnd_roller/Partials/roll_summary_widget.dart';
 import 'package:dnd_roller/Services/roll_service.dart';
@@ -50,57 +54,19 @@ class SinglePage extends StatelessWidget {
                 spacing: 16,
                 runSpacing: 16,
                 children: [
-                  LabeledInput(
-                      label: "Die sides", textController: dieSideController),
-                  LabeledInput(
-                      label: "Dice per roll",
-                      textController: dicePerRollController),
-                  LabeledInput(
-                      label: "Number of rolls",
-                      textController: rollNumberController),
-                  LabeledInput(
-                      label: "Success threshold",
-                      textController: thresholdController,
-                      widget: TextButton(
-                        onPressed: () {
-                          final dieSidesText = dieSideController.text;
-                          int? dieSides = 0;
-                          if ((dieSides = int.tryParse(dieSidesText)) != null) {
-                            thresholdController.text =
-                                (dieSides! ~/ 2 + 1).toString();
-                          }
-                        },
-                        style: TextButton.styleFrom(
-                            backgroundColor:
-                                Theme.of(context).primaryColor.withAlpha(55)),
-                        child: Text(
-                          "Half",
-                          style:
-                              TextStyle(color: Theme.of(context).primaryColor),
-                        ),
-                      )),
-                  LabeledInput(
-                    label: "Required successes",
-                    textController: successRequiredController,
-                    widget: TextButton(
-                      onPressed: () {
-                        final dicePerRollText = dicePerRollController.text;
-                        int? dicePerRoll = 0;
-                        if ((dicePerRoll = int.tryParse(dicePerRollText)) !=
-                            null) {
-                          successRequiredController.text =
-                              (dicePerRoll! ~/ 2).toString();
-                        }
-                      },
-                      style: TextButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(context).primaryColor.withAlpha(55)),
-                      child: Text(
-                        "Half",
-                        style: TextStyle(color: Theme.of(context).primaryColor),
-                      ),
-                    ),
+                  DieSidesInput(
+                    dieSideController: dieSideController,
                   ),
+                  DicePerRollInput(
+                      dicePerRollController: dicePerRollController),
+                  NumberOfRollsInput(
+                      rollNumberController: rollNumberController),
+                  SuccessThresholdInput(
+                      thresholdController: thresholdController,
+                      dieSideController: dieSideController),
+                  RequiredSuccessesInput(
+                      successRequiredController: successRequiredController,
+                      dicePerRollController: dicePerRollController)
                 ],
               ),
             ),
