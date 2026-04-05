@@ -1,9 +1,8 @@
 import 'dart:math';
 
 import 'package:dnd_roller/Models/roll_result.dart';
-import 'package:dnd_roller/Models/versus_result.dart';
-import 'package:dnd_roller/Services/roll_settings.dart';
-import 'package:dnd_roller/Services/row_stats.dart';
+import 'package:dnd_roller/Services/Single/roll_settings.dart';
+import 'package:dnd_roller/Services/Single/row_stats.dart';
 
 class RollService {
   final RollSettings settings;
@@ -52,19 +51,5 @@ class RollService {
           crits: crits));
     }
     return stats;
-  }
-
-  VersusResult decideWinner(RowStats statsA, RowStats statsB) {
-    if (statsA.successes == statsB.successes) {
-      if (statsA.crits == statsB.crits) {
-        return VersusResult.tie;
-      }
-      return statsA.crits > statsB.crits
-          ? VersusResult.sideA
-          : VersusResult.sideB;
-    }
-    return statsA.successes > statsB.successes
-        ? VersusResult.sideA
-        : VersusResult.sideB;
   }
 }

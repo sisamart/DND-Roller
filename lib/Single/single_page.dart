@@ -7,10 +7,11 @@ import 'package:dnd_roller/Partials/Inputs/success_threshold_input.dart';
 import 'package:dnd_roller/Single/single_dice_grid_widget.dart';
 import 'package:dnd_roller/Partials/roll_button.dart';
 import 'package:dnd_roller/Partials/roll_summary_widget.dart';
-import 'package:dnd_roller/Services/roll_service.dart';
-import 'package:dnd_roller/Services/roll_settings.dart';
-import 'package:dnd_roller/Services/row_stats.dart';
+import 'package:dnd_roller/Services/Single/roll_service.dart';
 import 'package:flutter/material.dart';
+
+import '../Services/Single/roll_settings.dart';
+import '../Services/Single/row_stats.dart';
 
 class SinglePage extends StatelessWidget {
   SinglePage({super.key});
@@ -98,9 +99,8 @@ class SinglePage extends StatelessWidget {
                 children: [
                   RollSummaryWidget(stats: stats),
                   SizedBox(height: 6),
-                  DiceGridWidget(
+                  SingleDiceGridWidget(
                     rolls: value,
-                    settings: settings,
                     stats: stats,
                   ),
                 ],

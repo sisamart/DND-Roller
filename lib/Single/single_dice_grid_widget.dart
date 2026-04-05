@@ -1,27 +1,24 @@
 import 'package:dnd_roller/Models/roll_result.dart';
 import 'package:dnd_roller/Partials/die_widget.dart';
 import 'package:dnd_roller/Partials/row_stats_widget.dart';
-import 'package:dnd_roller/Services/row_stats.dart';
 import 'package:flutter/material.dart';
 
-import '../Services/roll_settings.dart';
+import '../Services/Single/row_stats.dart';
 
-class DiceGridWidget extends StatefulWidget {
-  const DiceGridWidget(
+class SingleDiceGridWidget extends StatefulWidget {
+  const SingleDiceGridWidget(
       {super.key,
-      required this.settings,
       required this.rolls,
       required this.stats});
 
-  final RollSettings? settings;
   final List<List<RollResult>> rolls;
   final List<RowStats> stats;
 
   @override
-  State<DiceGridWidget> createState() => _DiceGridWidgetState();
+  State<SingleDiceGridWidget> createState() => _SingleDiceGridWidgetState();
 }
 
-class _DiceGridWidgetState extends State<DiceGridWidget> {
+class _SingleDiceGridWidgetState extends State<SingleDiceGridWidget> {
   final ScrollController _scrollController = ScrollController();
 
   @override

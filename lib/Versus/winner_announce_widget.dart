@@ -11,8 +11,10 @@ class WinnerAnnounceWidget extends StatelessWidget {
   String _getMessage(VersusResult result) {
     switch (result) {
       case VersusResult.sideA:
+      case VersusResult.critA:
         return Constants.sideAWinMessage;
       case VersusResult.sideB:
+      case VersusResult.critB:
         return Constants.sideBWinMessage;
       case VersusResult.tie:
         return Constants.tieMessage;

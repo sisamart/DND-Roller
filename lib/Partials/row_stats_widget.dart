@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../Services/row_stats.dart';
+import '../Services/Single/row_stats.dart';
 
 class RowStatsWidget extends StatelessWidget {
   const RowStatsWidget({super.key, required this.stats});

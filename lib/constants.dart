@@ -1,9 +1,9 @@
 
-import 'dart:ui';
 
+import 'package:dnd_roller/Services/Versus/versus_roll_settings.dart';
 import 'package:flutter/material.dart';
 
-import 'Services/roll_settings.dart';
+import 'Services/Single/roll_settings.dart';
 
 class Constants {
 
@@ -13,6 +13,8 @@ class Constants {
       numberOfRolls: 1,
       successfulThreshold: 6,
       requiredSuccesses: 1);
+
+  static VersusRollSettings versusSettings = VersusRollSettings(10, 1, 1, 1, 6);
 
   static const sideAWinMessage = "Side A wins!";
   static const sideBWinMessage = "Side B wins!";

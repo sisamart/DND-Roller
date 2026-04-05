@@ -2,5 +2,7 @@
 enum VersusResult {
   tie,
   sideA,
-  sideB
+  critA,
+  sideB,
+  critB
 }

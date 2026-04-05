@@ -1,7 +1,11 @@
 import 'package:dnd_roller/Models/versus_result.dart';
 import 'package:dnd_roller/Partials/Inputs/die_sides_input.dart';
+import 'package:dnd_roller/Partials/Inputs/number_of_rolls_input.dart';
 import 'package:dnd_roller/Partials/Inputs/success_threshold_input.dart';
 import 'package:dnd_roller/Partials/roll_button.dart';
+import 'package:dnd_roller/Services/Versus/versus_result_data.dart';
+import 'package:dnd_roller/Services/Versus/versus_roll_service.dart';
+import 'package:dnd_roller/Services/Versus/versus_roll_settings.dart';
 import 'package:dnd_roller/Versus/versus_side_rolls.dart';
 import 'package:dnd_roller/Versus/versus_side_setup.dart';
 import 'package:dnd_roller/Versus/winner_announce_widget.dart';
@@ -9,9 +13,6 @@ import 'package:dnd_roller/constants.dart';
 import 'package:flutter/material.dart';
 
 import '../Models/roll_result.dart';
-import '../Services/roll_service.dart';
-import '../Services/roll_settings.dart';
-import '../Services/row_stats.dart';
 
 class VersusPage extends StatefulWidget {
   const VersusPage({super.key});
@@ -25,32 +26,25 @@ class _VersusPageState extends State<VersusPage> {
   final thresholdController = TextEditingController(text: "6");
   final dicePerRollControllerA = TextEditingController(text: "1");
   final dicePerRollControllerB = TextEditingController(text: "1");
+  final rollNumberController = TextEditingController(text: "1");
 
   final _formKey = GlobalKey<FormState>();
 
   final rollsANotifier = ValueNotifier<List<List<RollResult>>>([]);
   final rollsBNotifier = ValueNotifier<List<List<RollResult>>>([]);
 
-  List<RowStats> statsA = [];
-  List<RowStats> statsB = [];
+  VersusResultData? resultData;
 
   VersusResult result = VersusResult.tie;
-  RollSettings settingsA = Constants.settings;
-  RollSettings settingsB = Constants.settings;
+  VersusRollSettings settings = Constants.versusSettings;
 
   void _makeSettings() {
-    settingsA = RollSettings(
-        dieSides: int.parse(dieSideController.text),
-        dicePerRoll: int.parse(dicePerRollControllerA.text),
-        numberOfRolls: 1,
-        successfulThreshold: int.parse(thresholdController.text),
-        requiredSuccesses: 1);
-    settingsB = RollSettings(
-        dieSides: int.parse(dieSideController.text),
-        dicePerRoll: int.parse(dicePerRollControllerB.text),
-        numberOfRolls: 1,
-        successfulThreshold: int.parse(thresholdController.text),
-        requiredSuccesses: 1);
+    settings = VersusRollSettings(
+        int.parse(dieSideController.text),
+        int.parse(dicePerRollControllerA.text),
+        int.parse(dicePerRollControllerB.text),
+        int.parse(rollNumberController.text),
+        int.parse(thresholdController.text));
   }
 
   @override
@@ -68,7 +62,11 @@ class _VersusPageState extends State<VersusPage> {
                   runSpacing: 16,
                   children: [
                     DieSidesInput(dieSideController: dieSideController),
-                    SuccessThresholdInput(thresholdController: thresholdController, dieSideController: dieSideController)
+                    NumberOfRollsInput(
+                        rollNumberController: rollNumberController),
+                    SuccessThresholdInput(
+                        thresholdController: thresholdController,
+                        dieSideController: dieSideController)
                   ],
                 ),
               ),
@@ -83,15 +81,11 @@ class _VersusPageState extends State<VersusPage> {
             Center(child: RollButton(onPressed: () {
               if (_formKey.currentState!.validate()) {
                 _makeSettings();
-                final serviceA = RollService(settings: settingsA);
-                final serviceB = RollService(settings: settingsB);
-                final rollsA = serviceA.getRolls();
-                final rollsB = serviceB.getRolls();
-                statsA = serviceA.calculateSummary(rollsA);
-                statsB = serviceB.calculateSummary(rollsB);
-                result = serviceA.decideWinner(statsA[0], statsB[0]);
-                rollsANotifier.value = rollsA;
-                rollsBNotifier.value = rollsB;
+                final service = VersusRollService(settings: settings);
+                resultData = service.calculateVersus();
+                rollsANotifier.value = resultData!.rollsA;
+                rollsBNotifier.value = resultData!.rollsB;
+                result = resultData?.finalResult ?? VersusResult.tie;
                 setState(() {});
               }
             })),
@@ -99,16 +93,18 @@ class _VersusPageState extends State<VersusPage> {
               height: 4,
             ),
             Divider(),
-            if (statsA.isNotEmpty)
+            if (rollsANotifier.value.isNotEmpty)
               IntrinsicHeight(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Expanded(
                       child: VersusSideRolls(
-                          rollsNotifier: rollsANotifier,
-                          stats: statsA[0],
-                          letter: "A"),
+                        rollsNotifier: rollsANotifier,
+                        settings: settings,
+                        roundResults: resultData?.roundResults ?? [],
+                        isSideA: true,
+                      ),
                     ),
                     Align(
                       alignment: Alignment.topCenter,
@@ -119,9 +115,11 @@ class _VersusPageState extends State<VersusPage> {
                     ),
                     Expanded(
                       child: VersusSideRolls(
-                          rollsNotifier: rollsBNotifier,
-                          stats: statsB[0],
-                          letter: "B"),
+                        rollsNotifier: rollsBNotifier,
+                        settings: settings,
+                        roundResults: resultData?.roundResults ?? [],
+                        isSideA: false,
+                      ),
                     ),
                   ],
                 ),

@@ -1,6 +1,7 @@
 import 'package:dnd_roller/Partials/stats_column_widget.dart';
-import 'package:dnd_roller/Services/row_stats.dart';
 import 'package:flutter/material.dart';
+
+import '../Services/Single/row_stats.dart';
 
 class RollSummaryWidget extends StatelessWidget {
   const RollSummaryWidget({super.key, required this.stats});
